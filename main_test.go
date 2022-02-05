@@ -59,6 +59,9 @@ port: 6565
 		}
 	})
 
+	// make sure ./log exist
+	assert.NoError(t, os.MkdirAll("./log", 0777))
+
 	t.Run("Success using real config file", func(t *testing.T) {
 		f, err := os.ReadFile(tmpConfigPath)
 		require.NoError(t, err)
