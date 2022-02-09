@@ -5,6 +5,12 @@ import (
 	"time"
 )
 
+// RandStringInterface signature to implements this random
+// string generator service.
+type RandStringInterface interface {
+	RandString(int) string
+}
+
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 const (
 	letterIdxBits = 6                    // 6 bits to represent a letter index
