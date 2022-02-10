@@ -8,7 +8,7 @@ import (
 // RandStringInterface signature to implements this random
 // string generator service.
 type RandStringInterface interface {
-	RandString(int) string
+	RandString() string
 }
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -20,10 +20,16 @@ const (
 
 var src = rand.NewSource(time.Now().UnixNano())
 
-func RandString(n int) string {
-	b := make([]byte, n)
+// RandomString service that generate random string based on given length.
+type RandomString struct {
+	Length int
+}
+
+// RandString generate random string.
+func (r *RandomString) RandString() string {
+	b := make([]byte, r.Length)
 	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
-	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
+	for i, cache, remain := r.Length-1, src.Int63(), letterIdxMax; i >= 0; {
 		if remain == 0 {
 			cache, remain = src.Int63(), letterIdxMax
 		}
