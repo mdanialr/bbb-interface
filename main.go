@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -32,7 +33,8 @@ func main() {
 		log.Fatalln("failed to open|create log file:", err)
 	}
 
-	routes.SetupRoutes(app, &appConfig)
+	cl := &http.Client{}
+	routes.SetupRoutes(app, &appConfig, cl)
 
 	logger.InfL.Printf("listening on %s:%v\n", appConfig.Host, appConfig.PortNum)
 	logger.ErrL.Fatalln(app.Listen(fmt.Sprintf("%s:%v", appConfig.Host, appConfig.PortNum)))

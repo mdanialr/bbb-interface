@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -8,7 +10,7 @@ import (
 	"github.com/kurvaid/bbb-interface/internal/handlers"
 )
 
-func SetupRoutes(app *fiber.App, conf *config.Model) {
+func SetupRoutes(app *fiber.App, conf *config.Model, hCl *http.Client) {
 	// Built-in fiber middlewares
 	app.Use(recover.New())
 	// Use log file only in production
@@ -25,7 +27,7 @@ func SetupRoutes(app *fiber.App, conf *config.Model) {
 	}
 
 	// This app's endpoints
-	//app.Get("/", handlers.Home)
+	app.Post("/meeting", handlers.CreateMeeting(conf, hCl))
 
 	// Custom middlewares AFTER endpoints
 	app.Use(handlers.DefaultRouteNotFound)
