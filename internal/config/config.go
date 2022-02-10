@@ -25,6 +25,7 @@ type Model struct {
 	Host      string `yaml:"host"`
 	PortNum   uint16 `yaml:"port"`
 	LogDir    string `yaml:"log"`
+	BBBHost   string `yaml:"bbb_host"`
 	LogFile   *os.File
 }
 
@@ -87,9 +88,13 @@ func (m *Model) Sanitization() error {
 		m.PortNum = 6767
 	}
 
-	//if m.SomethingImportant == "" {
-	//	return fmt.Errorf("`SomethingImportant` is required")
-	//}
+	if m.BBBHost == "" {
+		return fmt.Errorf("`bbb_host` is required")
+	}
+
+	if !strings.HasSuffix(m.BBBHost, "/") {
+		m.BBBHost += "/"
+	}
 
 	return nil
 }

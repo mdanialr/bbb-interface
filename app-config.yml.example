@@ -2,3 +2,4 @@ env: #dev|prod default to dev
 host: #default to localhost
 port: #default to 6767
 log: #default to ./logs/
+bbb_host: #required. this host must be FQDN example: https://test.bigbluebutton.com
