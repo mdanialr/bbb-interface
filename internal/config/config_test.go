@@ -134,22 +134,22 @@ func TestSanitization_Env(t *testing.T) {
 	}{
 		{
 			name:   "Env w dev should be dev",
-			sample: Model{Env: "dev"},
+			sample: Model{Env: "dev", BBBHost: "bbb-host"},
 			expect: "dev",
 		},
 		{
 			name:   "Env w prod should be prod",
-			sample: Model{Env: "prod"},
+			sample: Model{Env: "prod", BBBHost: "bbb-host"},
 			expect: "prod",
 		},
 		{
 			name:   "Env w/o value should be dev",
-			sample: Model{},
+			sample: Model{BBBHost: "bbb-host"},
 			expect: "dev",
 		},
 		{
 			name:   "Env w value not match either dev or prod should be dev",
-			sample: Model{Env: "uu"},
+			sample: Model{Env: "uu", BBBHost: "bbb-host"},
 			expect: "dev",
 		},
 	}
@@ -171,22 +171,22 @@ func TestSanitization_EnvIsProd(t *testing.T) {
 	}{
 		{
 			name:   "Env w dev should be false",
-			sample: Model{Env: "dev"},
+			sample: Model{Env: "dev", BBBHost: "bbb-host"},
 			expect: false,
 		},
 		{
 			name:   "Env w value not match either dev or prod should be false",
-			sample: Model{Env: "lol"},
+			sample: Model{Env: "lol", BBBHost: "bbb-host"},
 			expect: false,
 		},
 		{
 			name:   "Env w/o should be false",
-			sample: Model{},
+			sample: Model{BBBHost: "bbb-host"},
 			expect: false,
 		},
 		{
 			name:   "Env w prod should be true",
-			sample: Model{Env: "prod"},
+			sample: Model{Env: "prod", BBBHost: "bbb-host"},
 			expect: true,
 		},
 	}
@@ -208,17 +208,17 @@ func TestSanitization_Host(t *testing.T) {
 	}{
 		{
 			name:   "Host w localhost should be localhost",
-			sample: Model{Host: "localhost"},
+			sample: Model{Host: "localhost", BBBHost: "bbb-host"},
 			expect: "localhost",
 		},
 		{
 			name:   "Host w 120.222.46.23 should be 120.222.46.23",
-			sample: Model{Host: "120.222.46.23"},
+			sample: Model{Host: "120.222.46.23", BBBHost: "bbb-host"},
 			expect: "120.222.46.23",
 		},
 		{
 			name:   "Host w/o value should be localhost",
-			sample: Model{},
+			sample: Model{BBBHost: "bbb-host"},
 			expect: "localhost",
 		},
 	}
@@ -240,17 +240,17 @@ func TestSanitization_Port(t *testing.T) {
 	}{
 		{
 			name:   "Port w 2003 should be 2003",
-			sample: Model{PortNum: 2003},
+			sample: Model{PortNum: 2003, BBBHost: "bbb-host"},
 			expect: 2003,
 		},
 		{
 			name:   "Port w 44444 should be 44444",
-			sample: Model{PortNum: 44444},
+			sample: Model{PortNum: 44444, BBBHost: "bbb-host"},
 			expect: 44444,
 		},
 		{
-			name:   "Port w/o value should be 5050",
-			sample: Model{},
+			name:   "Port w/o value should be 6767",
+			sample: Model{BBBHost: "bbb-host"},
 			expect: 6767,
 		},
 	}
@@ -260,6 +260,40 @@ func TestSanitization_Port(t *testing.T) {
 			err := tt.sample.Sanitization()
 			require.NoError(t, err)
 			assert.Equal(t, tt.expect, tt.sample.PortNum)
+		})
+	}
+}
+
+func TestSanitization_BBBHost(t *testing.T) {
+	testCases := []struct {
+		name    string
+		sample  Model
+		expect  string
+		wantErr bool
+	}{
+		{
+			name:    "Error if required `bbb_host` field not provided",
+			sample:  Model{Env: "prod"},
+			wantErr: true,
+		},
+		{
+			name:   "`bbb_host` should has trailing slash",
+			sample: Model{BBBHost: "https://bbb-host"},
+			expect: "https://bbb-host/",
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := tc.sample.Sanitization()
+
+			switch tc.wantErr {
+			case true:
+				require.Error(t, err)
+			case false:
+				require.NoError(t, err)
+				assert.Equal(t, tc.expect, tc.sample.BBBHost)
+			}
 		})
 	}
 }
