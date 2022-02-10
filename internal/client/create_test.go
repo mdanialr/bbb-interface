@@ -1,0 +1,132 @@
+package client
+
+import (
+	"encoding/xml"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/kurvaid/bbb-interface/internal/api"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+const fakeChecksum = "checksum"
+
+func TestClientCreateMeeting_AssertUrl(t *testing.T) {
+	// prepare fake server to mimic BBB Server
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		expectSentUrl := "/bigbluebutton/api/create?name=meet-one&meetingID=meet01&moderatorPW=pass&attendeePW=pass&logoutURL=&checksum=" + fakeChecksum
+		assert.Equal(t, expectSentUrl, req.URL.String())
+
+		name := req.URL.Query().Get("name")
+		meetId := req.URL.Query().Get("meetingID")
+		attPass := req.URL.Query().Get("attendeePW")
+		modPass := req.URL.Query().Get("moderatorPW")
+
+		// assert name must not empty
+		require.NotEqual(t, "", name)
+
+		response := api.CreateMeetingResponse{
+			MeetingId:     meetId,
+			AttendeePass:  attPass,
+			ModeratorPass: modPass,
+		}
+
+		resp, err := xml.Marshal(&response)
+		require.NoError(t, err)
+
+		rw.WriteHeader(fiber.StatusOK)
+		_, err = rw.Write(resp)
+		require.NoError(t, err)
+	}))
+
+	// sample data to mimic json request from client
+	sample := api.CreateMeeting{
+		Name:          "meet-one",
+		MeetingId:     "meet01",
+		AttendeePass:  "pass",
+		ModeratorPass: "pass",
+	}
+
+	// checksum
+
+	fakeAPI := Create{server.Client(), fmt.Sprintf("%s/%s", server.URL, api.EndPoint), fakeChecksum}
+	resp, err := fakeAPI.CreateMeeting(sample)
+	require.NoError(t, err)
+
+	var respModel api.CreateMeetingResponse
+	err = xml.Unmarshal(resp, &respModel)
+	require.NoError(t, err)
+
+	assert.Equal(t, sample.MeetingId, respModel.MeetingId)
+	assert.Equal(t, sample.AttendeePass, respModel.AttendeePass)
+	assert.Equal(t, sample.ModeratorPass, respModel.ModeratorPass)
+	t.Cleanup(func() {
+		server.Close()
+	})
+}
+
+// prepare fake server to mimic BBB Server
+var fakeServer = func(t *testing.T) *httptest.Server {
+	return httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		name := req.URL.Query().Get("name")
+		meetId := req.URL.Query().Get("meetingID")
+		attPass := req.URL.Query().Get("attendeePW")
+		modPass := req.URL.Query().Get("moderatorPW")
+
+		// assert name must not empty
+		require.NotEqual(t, "", name)
+
+		response := api.CreateMeetingResponse{
+			MeetingId:     meetId,
+			AttendeePass:  attPass,
+			ModeratorPass: modPass,
+		}
+
+		resp, err := xml.Marshal(&response)
+		require.NoError(t, err)
+
+		rw.WriteHeader(fiber.StatusOK)
+		_, err = rw.Write(resp)
+		require.NoError(t, err)
+	}))
+}
+
+func TestClientCreateMeeting_AssertWithoutModeratorAndAttendeePassword(t *testing.T) {
+	// sample data to mimic json request from client
+	sample := api.CreateMeeting{
+		Name:      "meet-two",
+		MeetingId: "meet02",
+	}
+
+	fakeAPI := Create{fakeServer(t).Client(), fmt.Sprintf("%s/%s", fakeServer(t).URL, api.EndPoint), fakeChecksum}
+	resp, err := fakeAPI.CreateMeeting(sample)
+	require.NoError(t, err)
+
+	var respModel api.CreateMeetingResponse
+	err = xml.Unmarshal(resp, &respModel)
+	require.NoError(t, err)
+
+	assert.Equal(t, sample.MeetingId, respModel.MeetingId)
+	assert.NotEqual(t, "", respModel.AttendeePass)
+	assert.NotEqual(t, "", respModel.ModeratorPass)
+	t.Cleanup(func() {
+		fakeServer(t).Close()
+	})
+}
+
+func TestClientCreateMeeting_IncreaseCoverage(t *testing.T) {
+	// sample data to mimic json request from client
+	sample := api.CreateMeeting{MeetingId: "meet02"}
+
+	fakeAPI := Create{fakeServer(t).Client(), fmt.Sprintf("%s/%s", fakeServer(t).URL, api.EndPoint), fakeChecksum}
+	_, err := fakeAPI.CreateMeeting(sample)
+	require.Error(t, err)
+
+	t.Cleanup(func() {
+		fakeServer(t).Close()
+	})
+}
