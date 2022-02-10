@@ -22,6 +22,7 @@ type CreateMeetingResponse struct {
 	MeetingId     string `xml:"meetingID" json:"meeting_id"`
 	AttendeePass  string `xml:"attendeePW" json:"attendee_pass"`
 	ModeratorPass string `xml:"moderatorPW" json:"moderator_pass"`
+	CreateTime    string `xml:"createTime" json:"create_time"`
 	CreatedAt     string `xml:"createDate" json:"created_at"`
 	Duration      string `xml:"duration" json:"duration"`
 }
