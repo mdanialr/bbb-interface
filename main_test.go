@@ -24,6 +24,7 @@ func TestSetup(t *testing.T) {
 		`
 env: prod
 port: 6565
+bbb_host: https://fake.bigbluebutton.server
 `
 	var appConf config.Model
 
@@ -75,6 +76,7 @@ port: 6565
 		`
 env: prod
 port: 6565
+bbb_host: https://fake.bigbluebutton.server
 log: ./log
 `
 	t.Run("Success must exactly the same as in config file", func(t *testing.T) {
