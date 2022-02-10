@@ -26,6 +26,7 @@ type Model struct {
 	Host      string     `yaml:"host"`
 	PortNum   uint16     `yaml:"port"`
 	LogDir    string     `yaml:"log"`
+	RandomLen uint8      `yaml:"random_len"`
 	BBB       api.Config `yaml:"BBB"`
 	LogFile   *os.File
 }
@@ -87,6 +88,10 @@ func (m *Model) Sanitization() error {
 
 	if m.PortNum == 0 {
 		m.PortNum = 6767
+	}
+
+	if m.RandomLen == 0 {
+		m.RandomLen = 8
 	}
 
 	return nil

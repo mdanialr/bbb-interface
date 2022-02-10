@@ -264,6 +264,38 @@ func TestSanitization_Port(t *testing.T) {
 	}
 }
 
+func TestSanitization_RandomLen(t *testing.T) {
+	testCases := []struct {
+		name   string
+		sample Model
+		expect uint8
+	}{
+		{
+			name:   "Random length w 24 should be 24",
+			sample: Model{RandomLen: 24},
+			expect: 24,
+		},
+		{
+			name:   "Port w 64 should be 64",
+			sample: Model{RandomLen: 64},
+			expect: 64,
+		},
+		{
+			name:   "Port w/o value should be default to 8",
+			sample: Model{},
+			expect: 8,
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.sample.Sanitization()
+			require.NoError(t, err)
+			assert.Equal(t, tt.expect, tt.sample.RandomLen)
+		})
+	}
+}
+
 func TestSanitizationLog(t *testing.T) {
 	testCases := []struct {
 		name   string
