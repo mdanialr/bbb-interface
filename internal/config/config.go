@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/md5"
 	"fmt"
+	"github.com/kurvaid/bbb-interface/internal/api"
 	"io"
 	"os"
 	"strings"
@@ -21,11 +22,11 @@ type Interface interface {
 // Model holds data from config file.
 type Model struct {
 	EnvIsProd bool
-	Env       string `yaml:"env"`
-	Host      string `yaml:"host"`
-	PortNum   uint16 `yaml:"port"`
-	LogDir    string `yaml:"log"`
-	BBBHost   string `yaml:"bbb_host"`
+	Env       string     `yaml:"env"`
+	Host      string     `yaml:"host"`
+	PortNum   uint16     `yaml:"port"`
+	LogDir    string     `yaml:"log"`
+	BBB       api.Config `yaml:"BBB"`
 	LogFile   *os.File
 }
 
@@ -86,14 +87,6 @@ func (m *Model) Sanitization() error {
 
 	if m.PortNum == 0 {
 		m.PortNum = 6767
-	}
-
-	if m.BBBHost == "" {
-		return fmt.Errorf("`bbb_host` is required")
-	}
-
-	if !strings.HasSuffix(m.BBBHost, "/") {
-		m.BBBHost += "/"
 	}
 
 	return nil
