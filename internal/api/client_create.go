@@ -35,15 +35,15 @@ func (cm *CreateMeeting) ParseCreateMeeting(ran service.RandStringInterface) (st
 	}
 
 	if cm.MeetingId == "" {
-		cm.MeetingId = ran.RandString(8)
+		cm.MeetingId = ran.RandString()
 	}
 
 	if cm.ModeratorPass == "" {
-		cm.ModeratorPass = ran.RandString(16)
+		cm.ModeratorPass = ran.RandString()
 	}
 
 	if cm.AttendeePass == "" {
-		cm.AttendeePass = ran.RandString(16)
+		cm.AttendeePass = ran.RandString()
 	}
 
 	str := fmt.Sprintf(
