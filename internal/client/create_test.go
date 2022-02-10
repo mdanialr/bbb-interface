@@ -15,6 +15,16 @@ import (
 
 const fakeChecksum = "checksum"
 
+type fakeRandStrGenerator struct{ Length int }
+
+func (f fakeRandStrGenerator) RandString() (s string) {
+	for i := 0; i < f.Length; i++ {
+		s += "a"
+	}
+
+	return
+}
+
 func TestClientCreateMeeting_AssertUrl(t *testing.T) {
 	// prepare fake server to mimic BBB Server
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
@@ -50,11 +60,11 @@ func TestClientCreateMeeting_AssertUrl(t *testing.T) {
 		AttendeePass:  "pass",
 		ModeratorPass: "pass",
 	}
+	out, err := sample.ParseCreateMeeting(fakeRandStrGenerator{Length: 8})
+	url := fmt.Sprintf("%s/%s%s", server.URL, api.EndPoint, out)
 
-	// checksum
-
-	fakeAPI := Create{server.Client(), fmt.Sprintf("%s/%s", server.URL, api.EndPoint), fakeChecksum}
-	resp, err := fakeAPI.CreateMeeting(sample)
+	fakeAPI := Create{server.Client(), url, fakeChecksum}
+	resp, err := fakeAPI.CreateMeeting()
 	require.NoError(t, err)
 
 	var respModel api.CreateMeetingResponse
@@ -69,9 +79,9 @@ func TestClientCreateMeeting_AssertUrl(t *testing.T) {
 	})
 }
 
-// prepare fake server to mimic BBB Server
-var fakeServer = func(t *testing.T) *httptest.Server {
-	return httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+func TestClientCreateMeeting_AssertWithoutModeratorAndAttendeePassword(t *testing.T) {
+	// prepare fake server to mimic BBB Server
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		name := req.URL.Query().Get("name")
 		meetId := req.URL.Query().Get("meetingID")
 		attPass := req.URL.Query().Get("attendeePW")
@@ -93,17 +103,17 @@ var fakeServer = func(t *testing.T) *httptest.Server {
 		_, err = rw.Write(resp)
 		require.NoError(t, err)
 	}))
-}
 
-func TestClientCreateMeeting_AssertWithoutModeratorAndAttendeePassword(t *testing.T) {
 	// sample data to mimic json request from client
 	sample := api.CreateMeeting{
 		Name:      "meet-two",
 		MeetingId: "meet02",
 	}
+	out, err := sample.ParseCreateMeeting(fakeRandStrGenerator{Length: 8})
+	url := fmt.Sprintf("%s/%s%s", server.URL, api.EndPoint, out)
 
-	fakeAPI := Create{fakeServer(t).Client(), fmt.Sprintf("%s/%s", fakeServer(t).URL, api.EndPoint), fakeChecksum}
-	resp, err := fakeAPI.CreateMeeting(sample)
+	fakeAPI := Create{server.Client(), url, fakeChecksum}
+	resp, err := fakeAPI.CreateMeeting()
 	require.NoError(t, err)
 
 	var respModel api.CreateMeetingResponse
@@ -111,22 +121,31 @@ func TestClientCreateMeeting_AssertWithoutModeratorAndAttendeePassword(t *testin
 	require.NoError(t, err)
 
 	assert.Equal(t, sample.MeetingId, respModel.MeetingId)
-	assert.NotEqual(t, "", respModel.AttendeePass)
-	assert.NotEqual(t, "", respModel.ModeratorPass)
+	assert.Equal(t, "aaaaaaaa", respModel.AttendeePass)
+	assert.Equal(t, "aaaaaaaa", respModel.ModeratorPass)
 	t.Cleanup(func() {
-		fakeServer(t).Close()
+		server.Close()
 	})
 }
 
 func TestClientCreateMeeting_IncreaseCoverage(t *testing.T) {
+	// prepare fake server to mimic BBB Server
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.WriteHeader(fiber.StatusOK)
+		rw.Write(nil)
+	}))
+
 	// sample data to mimic json request from client
 	sample := api.CreateMeeting{MeetingId: "meet02"}
 
-	fakeAPI := Create{fakeServer(t).Client(), fmt.Sprintf("%s/%s", fakeServer(t).URL, api.EndPoint), fakeChecksum}
-	_, err := fakeAPI.CreateMeeting(sample)
+	out, err := sample.ParseCreateMeeting(fakeRandStrGenerator{Length: 8})
+	url := fmt.Sprintf("%s/%s%s", "http://localhost", api.EndPoint, out)
+
+	fakeAPI := Create{server.Client(), url, fakeChecksum}
+	_, err = fakeAPI.CreateMeeting()
 	require.Error(t, err)
 
 	t.Cleanup(func() {
-		fakeServer(t).Close()
+		server.Close()
 	})
 }
