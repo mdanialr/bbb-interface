@@ -16,7 +16,6 @@ type JoinMeeting struct {
 // JoinMeetingResponse holds data from BBB API response after join the meeting.
 type JoinMeetingResponse struct {
 	SessionToken string `xml:"session_token"`
-	Url          string `xml:"url"`
 }
 
 // ParseJoinMeeting parse given request body binding from json and convert them
