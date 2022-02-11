@@ -37,9 +37,9 @@ func CreateMeeting(conf *config.Model, httpClient *http.Client) func(c *fiber.Ct
 		out := service.SHA1HashUrl(conf.BBB.Secret, url)
 		url = fmt.Sprintf("%s%s%s", conf.BBB.Host, api.EndPoint, url)
 
-		createMeetApi := client.Create{Cl: httpClient, Url: url, CheckSum: out}
+		createMeetApi := client.Instance{Cl: httpClient, Url: url, Checksum: out}
 
-		resp, err := createMeetApi.CreateMeeting()
+		resp, err := createMeetApi.DispatchGET()
 		if err != nil {
 			c.Status(fiber.StatusBadGateway)
 			return c.JSON(fiber.Map{
