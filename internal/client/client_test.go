@@ -63,8 +63,8 @@ func TestClientCreateMeeting_AssertUrl(t *testing.T) {
 	out, err := sample.ParseCreateMeeting(fakeRandStrGenerator{Length: 8})
 	url := fmt.Sprintf("%s/%s%s", server.URL, api.EndPoint, out)
 
-	fakeAPI := Create{server.Client(), url, fakeChecksum}
-	resp, err := fakeAPI.CreateMeeting()
+	fakeAPI := Instance{server.Client(), url, fakeChecksum}
+	resp, err := fakeAPI.DispatchGET()
 	require.NoError(t, err)
 
 	var respModel api.CreateMeetingResponse
@@ -112,8 +112,8 @@ func TestClientCreateMeeting_AssertWithoutModeratorAndAttendeePassword(t *testin
 	out, err := sample.ParseCreateMeeting(fakeRandStrGenerator{Length: 8})
 	url := fmt.Sprintf("%s/%s%s", server.URL, api.EndPoint, out)
 
-	fakeAPI := Create{server.Client(), url, fakeChecksum}
-	resp, err := fakeAPI.CreateMeeting()
+	fakeAPI := Instance{server.Client(), url, fakeChecksum}
+	resp, err := fakeAPI.DispatchGET()
 	require.NoError(t, err)
 
 	var respModel api.CreateMeetingResponse
@@ -141,8 +141,8 @@ func TestClientCreateMeeting_IncreaseCoverage(t *testing.T) {
 	out, err := sample.ParseCreateMeeting(fakeRandStrGenerator{Length: 8})
 	url := fmt.Sprintf("%s/%s%s", "http://localhost", api.EndPoint, out)
 
-	fakeAPI := Create{server.Client(), url, fakeChecksum}
-	_, err = fakeAPI.CreateMeeting()
+	fakeAPI := Instance{server.Client(), url, fakeChecksum}
+	_, err = fakeAPI.DispatchGET()
 	require.Error(t, err)
 
 	t.Cleanup(func() {
