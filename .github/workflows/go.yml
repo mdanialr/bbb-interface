@@ -1,6 +1,12 @@
 name: BBB Interface CI
 
-on: [ push, pull_request]
+on:
+  push:
+    branches:
+      - *
+  pull_request:
+    branches:
+      - *
 
 jobs:
   ci:
