@@ -5,16 +5,10 @@ import (
 	"strings"
 )
 
-// Interface signature to implement this api config.
-type Interface interface {
-	Sanitization() error
-}
-
 // Config holds BBB api-related data.
 type Config struct {
 	Secret string `yaml:"secret"`
 	Host   string `yaml:"host"`
-	URL    string
 }
 
 // Sanitization check and sanitize api config instance.
@@ -30,8 +24,6 @@ func (c *Config) Sanitization() error {
 	if !strings.HasSuffix(c.Host, "/") {
 		c.Host += "/"
 	}
-
-	c.URL = fmt.Sprintf("%s%s", c.Host, EndPoint)
 
 	return nil
 }

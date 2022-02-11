@@ -55,7 +55,7 @@ func TestSanitization_AssertRequired(t *testing.T) {
 
 func TestSanitization_AssertEqual(t *testing.T) {
 	sample := Config{Secret: "sstt", Host: "http://localhost"}
-	expected := Config{Secret: "sstt", Host: "http://localhost/", URL: "http://localhost/bigbluebutton/api"}
+	expected := Config{Secret: "sstt", Host: "http://localhost/"}
 
 	testCases := []struct {
 		name     string
