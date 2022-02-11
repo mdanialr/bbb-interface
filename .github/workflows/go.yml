@@ -2,11 +2,9 @@ name: BBB Interface CI
 
 on:
   push:
-    branches: [ * ]
     tags:
       - v**
   pull_request:
-    branches: [ * ]
 
 jobs:
   ci:
