@@ -27,7 +27,8 @@ func SetupRoutes(app *fiber.App, conf *config.Model, hCl *http.Client) {
 	}
 
 	// This app's endpoints
-	app.Post("/meeting", handlers.CreateMeeting(conf, hCl))
+	app.Post("/create", handlers.CreateMeeting(conf, hCl))
+	app.Post("/join", handlers.JoinMeeting(conf, hCl))
 
 	// Custom middlewares AFTER endpoints
 	app.Use(handlers.DefaultRouteNotFound)
