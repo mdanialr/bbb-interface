@@ -8,7 +8,7 @@ type JoinMeeting struct {
 	MeetingId  string `json:"meeting_id"`  // The meeting ID that identifies the meeting you are attempting to join. Required.
 	Password   string `json:"password"`    // The password that this attendee is using. Also, to determine whether this attendee is moderator or not based on the password given. Required.
 	CreateTime string `json:"create_time"` // BigBlueButton will ensure it matches the ‘createTime’ for the session. If they differ, BigBlueButton will not proceed with the join request. This prevents a user from reusing their join URL for a subsequent session with the same meetingID. Required.
-	UserId     string `json:"user_id"`     // An identifier for this user that will help your application to identify which person this is. This user ID will be returned for this user in the getMeetingInfo API call so that you can check.
+	UserId     string `json:"user_id"`     // An identifier for this user that will help your application to identify which person this is. This user ID will be returned for this user in the getMeetingInfo API call so that you can check. Important.
 	Avatar     string `json:"avatar"`      // The link for the user’s avatar to be displayed.
 	IsGuest    bool   `json:"is_guest"`    // To indicate that the user is a guest.
 }
@@ -47,6 +47,18 @@ func (j *JoinMeeting) ParseJoinMeeting() (string, error) {
 		j.Name,
 		j.CreateTime,
 	)
+
+	if j.UserId != "" {
+		str += fmt.Sprintf("&userID=%s", j.UserId)
+	}
+
+	if j.Avatar != "" {
+		str += fmt.Sprintf("&avatarURL=%s", j.Avatar)
+	}
+
+	if j.IsGuest {
+		str += "&guest=true"
+	}
 
 	return str, nil
 }
