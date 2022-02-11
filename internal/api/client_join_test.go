@@ -40,3 +40,40 @@ func TestParseJoinMeeting(t *testing.T) {
 		assert.Equal(t, expect, out)
 	})
 }
+
+func TestParseJoinMeeting_OptionalParams(t *testing.T) {
+	testCases := []struct {
+		name   string
+		sample JoinMeeting
+		expect string
+	}{
+		{
+			name:   "Pass even all optional fields are not provided",
+			sample: JoinMeeting{MeetingId: "meet01", Password: "ap", Name: "Fake", CreateTime: "273648"},
+			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648",
+		},
+		{
+			name:   "If user ID exist then make sure it exist in url and match",
+			sample: JoinMeeting{MeetingId: "meet01", Password: "ap", Name: "Fake", CreateTime: "273648", UserId: "user01"},
+			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648&userID=user01",
+		},
+		{
+			name:   "If avatar exist then make sure it exist in url and match",
+			sample: JoinMeeting{MeetingId: "meet01", Password: "ap", Name: "Fake", CreateTime: "273648", Avatar: "https://site.com/avatar.png"},
+			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648&avatarURL=https://site.com/avatar.png",
+		},
+		{
+			name:   "If guest exist then make sure it exist in url and match (bool in string: 'true' or 'false')",
+			sample: JoinMeeting{MeetingId: "meet01", Password: "ap", Name: "Fake", CreateTime: "273648", IsGuest: true},
+			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648&guest=true",
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			out, err := tc.sample.ParseJoinMeeting()
+			require.NoError(t, err)
+			assert.Equal(t, tc.expect, out)
+		})
+	}
+}

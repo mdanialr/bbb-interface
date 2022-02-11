@@ -48,5 +48,17 @@ func (j *JoinMeeting) ParseJoinMeeting() (string, error) {
 		j.CreateTime,
 	)
 
+	if j.UserId != "" {
+		str += fmt.Sprintf("&userID=%s", j.UserId)
+	}
+
+	if j.Avatar != "" {
+		str += fmt.Sprintf("&avatarURL=%s", j.Avatar)
+	}
+
+	if j.IsGuest {
+		str += "&guest=true"
+	}
+
 	return str, nil
 }
