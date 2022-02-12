@@ -12,6 +12,9 @@ func SHA1HashUrl(sc, in string) string {
 	in = strings.ReplaceAll(in, "?", "")
 	in += sc
 
+	// trim slice prefix
+	in = strings.TrimPrefix(in, "/")
+
 	out := sha1.Sum([]byte(in))
 	return hex.EncodeToString(out[:])
 }
