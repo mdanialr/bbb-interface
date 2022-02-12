@@ -93,9 +93,11 @@ Example Request
 }
 ```
 
-Example Response
-```
-would be redirected to BBB server to join the meeting after success call.
+Example Response. It's simply just parse the incoming request then append the calculated checksum. 
+```json
+{
+  "url": "http://bbb-server.test/bigbluebutton/api/join?meetingID=someRandomStringFromCreateCall..."
+}
 ```
 ### Params
 > Request
@@ -113,3 +115,7 @@ would be redirected to BBB server to join the meeting after success call.
 `avatar` `string`: The link for the user’s avatar to be displayed.
 
 `is_guest` `boolean`: To indicate that the user is a guest.
+
+> Response
+
+`url`: The url that need to be open up in browser otherwise would end up got 401 error when joining.
