@@ -14,11 +14,3 @@ const (
 	UpdateRecordingMeta = "updateRecordings"    // Updates metadata in a recording.
 	EndPoint            = "bigbluebutton/api"   // BBB API endpoint.
 )
-
-// StdResponse standard response that would always return by BBB API
-// at every API call.
-type StdResponse struct {
-	Code   string `xml:"returncode"`
-	Msg    string `xml:"message"`
-	MsgKey string `xml:"messageKey"`
-}

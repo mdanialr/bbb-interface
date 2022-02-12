@@ -3,7 +3,6 @@ package handlers
 import (
 	"bytes"
 	"encoding/xml"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/kurvaid/bbb-interface/internal/api"
 	"github.com/kurvaid/bbb-interface/internal/config"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
