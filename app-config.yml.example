@@ -3,6 +3,7 @@ host: #default to localhost
 port: #default to 6767
 log: #default to ./logs/
 random_len: #default to 8
+token: #required. to authenticate incoming request to this service
 BBB:
   host: #required. this host must be FQDN example: https://test.bigbluebutton.com
   secret: #required. fill this using hash from bbb server config.
