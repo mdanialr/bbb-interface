@@ -25,6 +25,11 @@ func TestSHA1HashUrl(t *testing.T) {
 			url:      "somenameurl?param1=val1&param2=val2",
 			expected: "a81e64fc67c9db24d1c64c78dfefba035e64a741",
 		},
+		{
+			name:     "Success testing w url string prefix slice should be trimmed",
+			url:      "/somenameurl?param1=val1&param2=val2",
+			expected: "a81e64fc67c9db24d1c64c78dfefba035e64a741",
+		},
 	}
 
 	for i, tc := range testCases {
