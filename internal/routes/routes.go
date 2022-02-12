@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/kurvaid/bbb-interface/internal/config"
 	"github.com/kurvaid/bbb-interface/internal/handlers"
+	"github.com/kurvaid/bbb-interface/internal/middlewares"
 )
 
 func SetupRoutes(app *fiber.App, conf *config.Model, hCl *http.Client) {
@@ -25,6 +26,9 @@ func SetupRoutes(app *fiber.App, conf *config.Model, hCl *http.Client) {
 	case false:
 		app.Use(logger.New())
 	}
+
+	// This app's middlewares
+	app.Use(middlewares.Auth(conf))
 
 	// This app's endpoints
 	app.Post("/create", handlers.CreateMeeting(conf, hCl))

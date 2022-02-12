@@ -1,8 +1,37 @@
 # BBB Interface
 BigBlueButton API wrapper to make the other apps interact with the server more easily
 
-# Usage
+# How to Use
 ## Auth/Token
+Include the token in your request header.
+```
+key: Authorization
+value: TOKEN
+```
+Example in GO
+```
+import "net/http"
+
+req := http.NewRequest("POST", "http://url.example/endpoint", nil)
+req.Header.Set("Authorization", "theTOKEN")
+```
+Example in Python
+```python
+import requests
+
+headers = {"Authorization": "theTOKEN"}
+requests.post("http://url.example/endpoint", headers=headers)
+```
+
+## Error (*if any*)
+#### All error response return either *4xx* or *5xx* status code. 
+
+Example Error Response. _in case there are errors._
+```
+{
+    "message": "the detail of the error"
+}
+```
 
 ## Create Meeting
 > `POST` /create
