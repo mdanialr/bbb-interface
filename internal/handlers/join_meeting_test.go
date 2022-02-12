@@ -57,7 +57,7 @@ func TestJoinMeeting(t *testing.T) {
 	require.NoError(t, conf.BBB.Sanitization())
 
 	app := fiber.New()
-	app.Post("/meeting", JoinMeeting(conf, fakeJoinServerHelper(t).Client()))
+	app.Post("/meeting", JoinMeeting(conf))
 
 	t.Run("Success using minimum (required) json request", func(t *testing.T) {
 		buf := bytes.NewBufferString(sampleJoinRequestBody[0])
@@ -67,7 +67,7 @@ func TestJoinMeeting(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to initiate app test: %s", err)
 		}
-		assert.Equal(t, fiber.StatusSeeOther, res.StatusCode)
+		assert.Equal(t, fiber.StatusOK, res.StatusCode)
 	})
 
 	t.Run("Failed when sending empty value on required fields", func(t *testing.T) {
@@ -88,7 +88,7 @@ func TestJoinMeeting_VariousFailedCases(t *testing.T) {
 	require.NoError(t, conf.Sanitization())
 
 	app := fiber.New()
-	app.Post("/meeting", JoinMeeting(conf, fakeJoinServerHelper(t).Client()))
+	app.Post("/meeting", JoinMeeting(conf))
 
 	t.Run("Failed when sending wrong content type that should be json", func(t *testing.T) {
 		buf := bytes.NewBufferString(sampleRequestBody[0])
@@ -99,16 +99,5 @@ func TestJoinMeeting_VariousFailedCases(t *testing.T) {
 			t.Fatalf("failed to initiate app test: %s", err)
 		}
 		assert.Equal(t, fiber.StatusBadRequest, res.StatusCode)
-	})
-
-	t.Run("Failed when using wrong or invalid host for BBB server", func(t *testing.T) {
-		buf := bytes.NewBufferString(sampleJoinRequestBody[0])
-		req := httptest.NewRequest(fiber.MethodPost, "/meeting", buf)
-		req.Header.Set("Content-Type", fiber.MIMEApplicationJSON)
-		res, err := app.Test(req)
-		if err != nil {
-			t.Fatalf("failed to initiate app test: %s", err)
-		}
-		assert.Equal(t, fiber.StatusBadGateway, res.StatusCode)
 	})
 }
