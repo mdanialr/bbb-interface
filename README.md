@@ -9,10 +9,10 @@ key: Authorization
 value: TOKEN
 ```
 Example in GO
-```
+```go
 import "net/http"
 
-req := http.NewRequest("POST", "http://url.example/endpoint", nil)
+req, _ := http.NewRequest("POST", "http://url.example/endpoint", nil)
 req.Header.Set("Authorization", "theTOKEN")
 ```
 Example in Python
@@ -27,7 +27,7 @@ requests.post("http://url.example/endpoint", headers=headers)
 #### All error response return either *4xx* or *5xx* status code. 
 
 Example Error Response. _in case there are errors._
-```
+```json
 {
     "message": "the detail of the error"
 }
@@ -37,7 +37,7 @@ Example Error Response. _in case there are errors._
 > `POST` /create
 
 Example Request
-```
+```json
 {
     "name": "meeting01",
     "attendee_pass": "password-for-attende",
@@ -47,7 +47,7 @@ Example Request
 }
 ```
 Example Response
-```
+```json
 {
     "meeting_id": "someRandomString",
     "attendee_pass": "password-for-attende",
@@ -81,14 +81,14 @@ Example Response
 > `POST` /join
 
 Example Request
-```
+```json
 {
     "name": "namaMahasiswaAtauDosen",
     "meeting_id": "someRandomStringFromCreateCall",
     "password": "passwordThatWillDecideThisUserIsAttendeeOrModerator",
     "create_time": "1531155809613",
     "user_id": "mhs01",
-    "avatar": "https://maybe-back-to-lms.com/assets/avatar/mhs01.png"
+    "avatar": "https://maybe-back-to-lms.com/assets/avatar/mhs01.png",
     "is_guest": false
 }
 ```
