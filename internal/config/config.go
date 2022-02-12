@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"crypto/md5"
 	"fmt"
-	"github.com/kurvaid/bbb-interface/internal/api"
 	"io"
 	"os"
 	"strings"
 
+	"github.com/kurvaid/bbb-interface/internal/api"
 	"gopkg.in/yaml.v3"
 )
 
@@ -28,6 +28,7 @@ type Model struct {
 	LogDir    string     `yaml:"log"`
 	RandomLen uint8      `yaml:"random_len"`
 	BBB       api.Config `yaml:"BBB"`
+	Token     string     `yaml:"token"`
 	LogFile   *os.File
 }
 
