@@ -24,7 +24,9 @@ func TestSetup(t *testing.T) {
 		`
 env: prod
 port: 6565
-bbb_host: https://fake.bigbluebutton.server
+BBB:
+  host: https://fake.bigbluebutton.server
+  secret: secret
 `
 	var appConf config.Model
 
@@ -55,8 +57,10 @@ bbb_host: https://fake.bigbluebutton.server
 			log.Fatalln("failed cleaning tmp config file:", err)
 		}
 		// remove leftover created log file
-		if err := os.Remove("./log/app-log"); err != nil {
-			log.Fatalln("failed cleaning log file:", err)
+		if _, err := os.Stat("./log/app-log"); err == nil {
+			if err := os.Remove("./log/app-log"); err != nil {
+				log.Fatalln("failed cleaning log file:", err)
+			}
 		}
 	})
 
@@ -76,8 +80,10 @@ bbb_host: https://fake.bigbluebutton.server
 		`
 env: prod
 port: 6565
-bbb_host: https://fake.bigbluebutton.server
 log: ./log
+BBB:
+  host: https://fake.bigbluebutton.server
+  secret: secret
 `
 	t.Run("Success must exactly the same as in config file", func(t *testing.T) {
 		_, err := setup(&appConf, bytes.NewBufferString(fakeConfigFile))
@@ -86,6 +92,8 @@ log: ./log
 		assert.Equal(t, "localhost", appConf.Host)
 		assert.Equal(t, strconv.Itoa(int(uint16(6565))), strconv.Itoa(int(appConf.PortNum)))
 		assert.Equal(t, "./log/", appConf.LogDir)
+		assert.Equal(t, "https://fake.bigbluebutton.server/", appConf.BBB.Host)
+		assert.Equal(t, "secret", appConf.BBB.Secret)
 	})
 
 	fakeConfigFile =
