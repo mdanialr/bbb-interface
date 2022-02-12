@@ -71,16 +71,16 @@ would be redirected to BBB server to join the meeting after success call.
 ### Params
 > Request
 
-`name` `required`: The full name that is to be used to identify this user to other conference attendees.
+`name` `string` `required`: The full name that is to be used to identify this user to other conference attendees.
 
-`meeting_id` `required`: The meeting ID that identifies the meeting you are attempting to join.
+`meeting_id` `string` `required`: The meeting ID that identifies the meeting you are attempting to join.
 
-`password` `required`: The password that this attendee is using. Also, to determine whether this attendee is moderator or not based on the password given.
+`password` `string` `required`: The password that this attendee is using. Also, to determine whether this attendee is moderator or not based on the password given.
 
-`create_time` `required`: BigBlueButton will ensure it matches the ‘createTime’ for the session. If they differ, BigBlueButton will not proceed with the join request. This prevents a user from reusing their join URL for a subsequent session with the same meetingID.
+`create_time` `string` `required`: BigBlueButton will ensure it matches the ‘createTime’ for the session. If they differ, BigBlueButton will not proceed with the join request. This prevents a user from reusing their join URL for a subsequent session with the same meetingID.
 
-`user_id`: An identifier for this user that will help your application to identify which person this is. This user ID will be returned for this user in the getMeetingInfo API call so that you can check.
+`user_id` `string`: An identifier for this user that will help your application to identify which person this is. This user ID will be returned for this user in the getMeetingInfo API call so that you can check.
 
-`avatar`: The link for the user’s avatar to be displayed.
+`avatar` `string`: The link for the user’s avatar to be displayed.
 
-`is_guest`: To indicate that the user is a guest.
+`is_guest` `boolean`: To indicate that the user is a guest.
