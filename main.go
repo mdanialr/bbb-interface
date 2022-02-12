@@ -52,6 +52,9 @@ func setup(conf *config.Model, fBuf io.Reader) (*fiber.App, error) {
 		return nil, fmt.Errorf("failed sanitizing config: %v\n", err)
 	}
 	conf.SanitizationLog()
+	if err := conf.BBB.Sanitization(); err != nil {
+		return nil, fmt.Errorf("failed sanitizing BBB config: %v\n", err)
+	}
 
 	// Init internal logging.
 	if err := logger.InitLogger(conf); err != nil {
