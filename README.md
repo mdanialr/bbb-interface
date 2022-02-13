@@ -39,11 +39,12 @@ Example Error Response. _in case there are errors._
 Example Request
 ```json
 {
-    "name": "meeting01",
-    "attendee_pass": "password-for-attende",
+    "name": "meeting with earth",
+    "attendee_pass": "password-for-attendee",
     "moderator_pass": "password-for-moderator",
     "max_participant": 100,
-    "redirect_at_logout": "https://maybe-back-to-lms.com/dashboard"
+    "redirect_at_logout": "https://maybe-back-to-lms.com/dashboard",
+    "welcome_msg": "Hello from earth!!"
 }
 ```
 Example Response
@@ -69,6 +70,8 @@ Example Response
 
 `redirect_at_logout` `string`: The URL that the BigBlueButton client will go to after users click the OK button on the ‘You have been logged out message’.
 
+`welcome_msg` `string`: A welcome message that gets displayed on the chat window when the participant joins.
+
 > Response
 
 `meeting_id` `string`: A meeting ID that can be used to identify this meeting by the 3rd-party application.
@@ -83,11 +86,11 @@ Example Response
 Example Request
 ```json
 {
-    "name": "namaMahasiswaAtauDosen",
+    "name": "nama Mahasiswa Atau Dosen",
     "meeting_id": "someRandomStringFromCreateCall",
     "password": "passwordThatWillDecideThisUserIsAttendeeOrModerator",
     "create_time": "1531155809613",
-    "user_id": "mhs01",
+    "user_id": "mhs 01",
     "avatar": "https://maybe-back-to-lms.com/assets/avatar/mhs01.png",
     "is_guest": false
 }
