@@ -28,7 +28,7 @@ func (f fakeRandStrGenerator) RandString() (s string) {
 func TestClientCreateMeeting_AssertUrl(t *testing.T) {
 	// prepare fake server to mimic BBB Server
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		expectSentUrl := "/bigbluebutton/api/create?name=meet-one&meetingID=meet01&moderatorPW=pass&attendeePW=pass&logoutURL=&checksum=" + fakeChecksum
+		expectSentUrl := "/bigbluebutton/api/create?name=meet-one&meetingID=meet01&moderatorPW=pass&attendeePW=pass&checksum=" + fakeChecksum
 		assert.Equal(t, expectSentUrl, req.URL.String())
 
 		name := req.URL.Query().Get("name")

@@ -49,14 +49,17 @@ func (cm *CreateMeeting) ParseCreateMeeting(ran service.RandStringInterface) (st
 	}
 
 	str := fmt.Sprintf(
-		"/%s?name=%s&meetingID=%s&moderatorPW=%s&attendeePW=%s&logoutURL=%s",
+		"/%s?name=%s&meetingID=%s&moderatorPW=%s&attendeePW=%s",
 		Create,
 		url.QueryEscape(cm.Name),
 		cm.MeetingId,
 		cm.ModeratorPass,
 		cm.AttendeePass,
-		cm.RedirectAtLogout,
 	)
+
+	if cm.RedirectAtLogout != "" {
+		str += fmt.Sprintf("&logoutURL=%s", cm.RedirectAtLogout)
+	}
 
 	if cm.WelcomeMsg != "" {
 		cm.WelcomeMsg = url.QueryEscape(cm.WelcomeMsg)
