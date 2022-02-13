@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/kurvaid/bbb-interface/internal/service"
 )
@@ -49,7 +50,7 @@ func (cm *CreateMeeting) ParseCreateMeeting(ran service.RandStringInterface) (st
 	str := fmt.Sprintf(
 		"/%s?name=%s&meetingID=%s&moderatorPW=%s&attendeePW=%s&logoutURL=%s",
 		Create,
-		cm.Name,
+		url.QueryEscape(cm.Name),
 		cm.MeetingId,
 		cm.ModeratorPass,
 		cm.AttendeePass,

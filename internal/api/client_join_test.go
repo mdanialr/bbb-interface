@@ -39,6 +39,11 @@ func TestParseJoinMeeting(t *testing.T) {
 			sample: JoinMeeting{MeetingId: "meet01", Password: "ap", Name: "Fake", CreateTime: "273648"},
 			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648",
 		},
+		{
+			name:   "Should pass even the name has whitespace",
+			sample: JoinMeeting{MeetingId: "meet01", Password: "ap", Name: "Fake Using Whitespace", CreateTime: "273648"},
+			expect: "/join?meetingID=meet01&password=ap&fullName=Fake+Using+Whitespace&createTime=273648",
+		},
 	}
 
 	for _, tc := range testCases {
@@ -70,6 +75,11 @@ func TestParseJoinMeeting_OptionalParams(t *testing.T) {
 			name:   "If user ID exist then make sure it exist in url and match",
 			sample: JoinMeeting{MeetingId: "meet01", Password: "ap", Name: "Fake", CreateTime: "273648", UserId: "user01"},
 			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648&userID=user01",
+		},
+		{
+			name:   "user ID should got encoded to URL even using whitespace if provided",
+			sample: JoinMeeting{MeetingId: "meet01", Password: "ap", Name: "Fake", CreateTime: "273648", UserId: "user 02 whitespace"},
+			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648&userID=user+02+whitespace",
 		},
 		{
 			name:   "If avatar exist then make sure it exist in url and match",

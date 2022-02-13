@@ -1,6 +1,9 @@
 package api
 
-import "fmt"
+import (
+	"fmt"
+	"net/url"
+)
 
 // JoinMeeting format that needed to join a meeting. This should be sent to BBB API as URL.
 type JoinMeeting struct {
@@ -21,7 +24,6 @@ type JoinMeetingResponse struct {
 // ParseJoinMeeting parse given request body binding from json and convert them
 // to url string that meet BBB API requirements.
 func (j *JoinMeeting) ParseJoinMeeting() (string, error) {
-	// /join?meetingID=test01&password=ap&fullName=Chris&createTime=273648
 	if j.Name == "" {
 		return "", fmt.Errorf("`name` is required")
 	}
@@ -43,11 +45,12 @@ func (j *JoinMeeting) ParseJoinMeeting() (string, error) {
 		Join,
 		j.MeetingId,
 		j.Password,
-		j.Name,
+		url.QueryEscape(j.Name),
 		j.CreateTime,
 	)
 
 	if j.UserId != "" {
+		j.UserId = url.QueryEscape(j.UserId)
 		str += fmt.Sprintf("&userID=%s", j.UserId)
 	}
 
