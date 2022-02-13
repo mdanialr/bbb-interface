@@ -48,4 +48,11 @@ func TestParseCreateMeeting(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, "/create?name=te&meetingID=aaaaaaaa&moderatorPW=mpw&attendeePW=apw&logoutURL=&maxParticipants=255", out)
 	})
+
+	t.Run("Make sure name & welcome params got encoded to URL even using whitespace", func(t *testing.T) {
+		sample := CreateMeeting{Name: "use blank", ModeratorPass: "mpw", AttendeePass: "apw", WelcomeMsg: "Hello from earth!!"}
+		out, err := sample.ParseCreateMeeting(fake)
+		require.NoError(t, err)
+		assert.Equal(t, "/create?name=use+blank&meetingID=aaaaaaaa&moderatorPW=mpw&attendeePW=apw&logoutURL=&welcome=Hello+from+earth%21%21", out)
+	})
 }
