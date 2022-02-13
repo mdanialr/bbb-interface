@@ -15,6 +15,7 @@ type CreateMeeting struct {
 	ModeratorPass    string `json:"moderator_pass"`     // Password that would be used by moderator to enter the meeting. Optional.
 	MaxParticipants  uint8  `json:"max_participant"`    // Set the maximum number of users allowed to join the conference at the same time.
 	RedirectAtLogout string `json:"redirect_at_logout"` // The URL that the BigBlueButton client will go to after users click the OK button on the ‘You have been logged out message’.
+	WelcomeMsg       string `json:"welcome_msg"`        // A welcome message that gets displayed on the chat window when the participant joins.
 }
 
 // CreateMeetingResponse holds data from BBB API response after create meeting.
@@ -56,6 +57,11 @@ func (cm *CreateMeeting) ParseCreateMeeting(ran service.RandStringInterface) (st
 		cm.AttendeePass,
 		cm.RedirectAtLogout,
 	)
+
+	if cm.WelcomeMsg != "" {
+		cm.WelcomeMsg = url.QueryEscape(cm.WelcomeMsg)
+		str += fmt.Sprintf("&welcome=%s", cm.WelcomeMsg)
+	}
 
 	if cm.MaxParticipants != 0 {
 		str += fmt.Sprintf("&maxParticipants=%d", cm.MaxParticipants)
