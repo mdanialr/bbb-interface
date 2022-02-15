@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/kurvaid/bbb-interface/internal/api"
@@ -26,18 +27,24 @@ func CreateMeeting(conf *config.Model, httpClient *http.Client) func(c *fiber.Ct
 		}
 
 		randNum := service.RandomString{Length: int(conf.RandomLen)}
-		url, err := cMeet.ParseCreateMeeting(&randNum)
+		uri, err := cMeet.ParseCreateMeeting(&randNum)
 		if err != nil {
 			c.Status(fiber.StatusInternalServerError)
 			return c.JSON(fiber.Map{
 				"message": fmt.Sprintf("failed to parse create meeting url: %s", err),
 			})
 		}
-		// prepare url and calculate their checksum.
-		out := service.SHA1HashUrl(conf.BBB.Secret, url)
-		url = fmt.Sprintf("%s%s%s", conf.BBB.Host, api.EndPoint, url)
 
-		createMeetApi := client.Instance{Cl: httpClient, Url: url, Checksum: out}
+		// append this app callback endpoint when a meeting destroyed or ended also
+		// the meeting id to the designated endpoint
+		callbackEndPoint := fmt.Sprintf("%s?meetingID=%s", conf.CallbackOnDestroyThisApp, cMeet.MeetingId)
+		// append the callback to create room requests
+		uri += fmt.Sprintf("&meta_endCallbackUrl=%s", url.QueryEscape(callbackEndPoint))
+		// prepare url and calculate their checksum.
+		out := service.SHA1HashUrl(conf.BBB.Secret, uri)
+		uri = fmt.Sprintf("%s%s%s", conf.BBB.Host, api.EndPoint, uri)
+
+		createMeetApi := client.Instance{Cl: httpClient, Url: uri, Checksum: out}
 
 		resp, err := createMeetApi.DispatchGET()
 		if err != nil {
