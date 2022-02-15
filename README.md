@@ -44,7 +44,8 @@ Example Request
     "moderator_pass": "password-for-moderator",
     "max_participant": 100,
     "redirect_at_logout": "https://maybe-back-to-lms.com/dashboard",
-    "welcome_msg": "Hello from earth!!"
+    "welcome_msg": "Hello from earth!!",
+    "is_recording": true
 }
 ```
 Example Response
@@ -71,6 +72,8 @@ Example Response
 `redirect_at_logout` `string`: The URL that the BigBlueButton client will go to after users click the OK button on the ‘You have been logged out message’.
 
 `welcome_msg` `string`: A welcome message that gets displayed on the chat window when the participant joins.
+
+`is_recording` `boolean`: Enable button to start/pause/stop recording the meeting.
 
 > Response
 
