@@ -4,6 +4,8 @@ port: #default to 6767
 log: #default to ./logs/
 random_len: #default to 8
 token: #required. to authenticate incoming request to this service
+callback_on_destroy_this_app: #default to http://localhost
+callback_on_destroy: #default to http://localhost
 BBB:
   host: #required. this host must be FQDN example: https://test.bigbluebutton.com
   secret: #required. fill this using hash from bbb server config.
