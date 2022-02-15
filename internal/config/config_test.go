@@ -296,6 +296,60 @@ func TestSanitization_RandomLen(t *testing.T) {
 	}
 }
 
+func TestSanitization_CallbackOnDestroy(t *testing.T) {
+	testCases := []struct {
+		name   string
+		sample Model
+		expect string
+	}{
+		{
+			name:   "Default to http://localhost/",
+			sample: Model{},
+			expect: "http://localhost/",
+		},
+		{
+			name:   "Should has trailing slash",
+			sample: Model{CallbackOnDestroy: "http://some-random.domain"},
+			expect: "http://some-random.domain/",
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.sample.Sanitization()
+			require.NoError(t, err)
+			assert.Equal(t, tt.expect, tt.sample.CallbackOnDestroy)
+		})
+	}
+}
+
+func TestSanitization_CallbackOnDestroyThisApp(t *testing.T) {
+	testCases := []struct {
+		name   string
+		sample Model
+		expect string
+	}{
+		{
+			name:   "Default to http://localhost",
+			sample: Model{},
+			expect: "http://localhost",
+		},
+		{
+			name:   "Should not has trailing slash",
+			sample: Model{CallbackOnDestroyThisApp: "http://some-random.domain/callback/url/"},
+			expect: "http://some-random.domain/callback/url",
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.sample.Sanitization()
+			require.NoError(t, err)
+			assert.Equal(t, tt.expect, tt.sample.CallbackOnDestroyThisApp)
+		})
+	}
+}
+
 func TestSanitizationLog(t *testing.T) {
 	testCases := []struct {
 		name   string

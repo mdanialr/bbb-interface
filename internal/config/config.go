@@ -21,15 +21,17 @@ type Interface interface {
 
 // Model holds data from config file.
 type Model struct {
-	EnvIsProd bool
-	Env       string     `yaml:"env"`
-	Host      string     `yaml:"host"`
-	PortNum   uint16     `yaml:"port"`
-	LogDir    string     `yaml:"log"`
-	RandomLen uint8      `yaml:"random_len"`
-	BBB       api.Config `yaml:"BBB"`
-	Token     string     `yaml:"token"`
-	LogFile   *os.File
+	EnvIsProd                bool
+	Env                      string     `yaml:"env"`
+	Host                     string     `yaml:"host"`
+	PortNum                  uint16     `yaml:"port"`
+	LogDir                   string     `yaml:"log"`
+	RandomLen                uint8      `yaml:"random_len"`
+	BBB                      api.Config `yaml:"BBB"`
+	Token                    string     `yaml:"token"`
+	CallbackOnDestroyThisApp string     `yaml:"callback_on_destroy_this_app"`
+	CallbackOnDestroy        string     `yaml:"callback_on_destroy"`
+	LogFile                  *os.File
 }
 
 // NewConfig read io.Reader then map and load the value to the returned Model.
@@ -93,6 +95,22 @@ func (m *Model) Sanitization() error {
 
 	if m.RandomLen == 0 {
 		m.RandomLen = 8
+	}
+
+	if m.CallbackOnDestroyThisApp == "" {
+		m.CallbackOnDestroyThisApp = "http://localhost"
+	}
+
+	if strings.HasSuffix(m.CallbackOnDestroyThisApp, "/") {
+		m.CallbackOnDestroyThisApp = strings.TrimSuffix(m.CallbackOnDestroyThisApp, "/")
+	}
+
+	if m.CallbackOnDestroy == "" {
+		m.CallbackOnDestroy = "http://localhost/"
+	}
+
+	if !strings.HasSuffix(m.CallbackOnDestroy, "/") {
+		m.CallbackOnDestroy += "/"
 	}
 
 	return nil
