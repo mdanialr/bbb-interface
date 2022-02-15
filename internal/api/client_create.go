@@ -16,6 +16,7 @@ type CreateMeeting struct {
 	MaxParticipants  uint8  `json:"max_participant"`    // Set the maximum number of users allowed to join the conference at the same time.
 	RedirectAtLogout string `json:"redirect_at_logout"` // The URL that the BigBlueButton client will go to after users click the OK button on the ‘You have been logged out message’.
 	WelcomeMsg       string `json:"welcome_msg"`        // A welcome message that gets displayed on the chat window when the participant joins.
+	IsRecording      bool   `json:"is_recording"`       // Instructs the BigBlueButton server to record the media and events in the session for later playback.
 }
 
 // CreateMeetingResponse holds data from BBB API response after create meeting.
@@ -58,6 +59,7 @@ func (cm *CreateMeeting) ParseCreateMeeting(ran service.RandStringInterface) (st
 	)
 
 	if cm.RedirectAtLogout != "" {
+		cm.RedirectAtLogout = url.QueryEscape(cm.RedirectAtLogout)
 		str += fmt.Sprintf("&logoutURL=%s", cm.RedirectAtLogout)
 	}
 
@@ -68,6 +70,10 @@ func (cm *CreateMeeting) ParseCreateMeeting(ran service.RandStringInterface) (st
 
 	if cm.MaxParticipants != 0 {
 		str += fmt.Sprintf("&maxParticipants=%d", cm.MaxParticipants)
+	}
+
+	if cm.IsRecording {
+		str += "&record=true"
 	}
 
 	return str, nil
