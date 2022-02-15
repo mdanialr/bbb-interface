@@ -82,14 +82,19 @@ func TestParseJoinMeeting_OptionalParams(t *testing.T) {
 			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648&userID=user+02+whitespace",
 		},
 		{
-			name:   "If avatar exist then make sure it exist in url and match",
+			name:   "If avatar exist then make sure it exist in url and match and already URL encoded",
 			sample: JoinMeeting{MeetingId: "meet01", Password: "ap", Name: "Fake", CreateTime: "273648", Avatar: "https://site.com/avatar.png"},
-			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648&avatarURL=https://site.com/avatar.png",
+			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648&avatarURL=https%3A%2F%2Fsite.com%2Favatar.png",
 		},
 		{
 			name:   "If guest exist then make sure it exist in url and match (bool in string: 'true' or 'false')",
 			sample: JoinMeeting{MeetingId: "meet01", Password: "ap", Name: "Fake", CreateTime: "273648", IsGuest: true},
 			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648&guest=true",
+		},
+		{
+			name:   "If avatar exist then make sure its encoded to URL",
+			sample: JoinMeeting{MeetingId: "meet01", Password: "ap", Name: "Fake", CreateTime: "273648", Avatar: "https://site.com/path to avatar!!.png"},
+			expect: "/join?meetingID=meet01&password=ap&fullName=Fake&createTime=273648&avatarURL=https%3A%2F%2Fsite.com%2Fpath+to+avatar%21%21.png",
 		},
 	}
 
