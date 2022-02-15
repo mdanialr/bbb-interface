@@ -55,6 +55,7 @@ func (j *JoinMeeting) ParseJoinMeeting() (string, error) {
 	}
 
 	if j.Avatar != "" {
+		j.Avatar = url.QueryEscape(j.Avatar)
 		str += fmt.Sprintf("&avatarURL=%s", j.Avatar)
 	}
 
