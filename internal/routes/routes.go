@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/kurvaid/bbb-interface/internal/middlewares"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -8,7 +9,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/kurvaid/bbb-interface/internal/config"
 	"github.com/kurvaid/bbb-interface/internal/handlers"
-	"github.com/kurvaid/bbb-interface/internal/middlewares"
 )
 
 func SetupRoutes(app *fiber.App, conf *config.Model, hCl *http.Client) {
@@ -27,12 +27,15 @@ func SetupRoutes(app *fiber.App, conf *config.Model, hCl *http.Client) {
 		app.Use(logger.New())
 	}
 
-	// This app's middlewares
-	app.Use(middlewares.Auth(conf))
-
 	// This app's endpoints
-	app.Post("/create", handlers.CreateMeeting(conf, hCl))
-	app.Post("/join", handlers.JoinMeeting(conf))
+	app.Post("/create",
+		middlewares.Auth(conf),
+		handlers.CreateMeeting(conf, hCl),
+	)
+	app.Post("/join",
+		middlewares.Auth(conf),
+		handlers.JoinMeeting(conf),
+	)
 	app.Get("/callback/destroy", handlers.CallbackOnDestroy(conf, hCl))
 
 	// Custom middlewares AFTER endpoints
