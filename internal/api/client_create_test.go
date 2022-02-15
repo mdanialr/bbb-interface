@@ -55,4 +55,32 @@ func TestParseCreateMeeting(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, "/create?name=use+blank&meetingID=aaaaaaaa&moderatorPW=mpw&attendeePW=apw&welcome=Hello+from+earth%21%21", out)
 	})
+
+	t.Run("Should include `redirect_at_logout` field if provided then encoded to valid URL otherwise no need to include it in URL", func(t *testing.T) {
+		sample := CreateMeeting{Name: "hello there", ModeratorPass: "mp", AttendeePass: "ap", RedirectAtLogout: "https://redirect.domain/dashboard user six"}
+		out, err := sample.ParseCreateMeeting(fake)
+		require.NoError(t, err)
+		assert.Equal(t, "/create?name=hello+there&meetingID=aaaaaaaa&moderatorPW=mp&attendeePW=ap&logoutURL=https%3A%2F%2Fredirect.domain%2Fdashboard+user+six", out)
+	})
+
+	t.Run("Should include `record` boolean field if its true", func(t *testing.T) {
+		sample := CreateMeeting{Name: "meet one", ModeratorPass: "mp", AttendeePass: "ap", IsRecording: true}
+		out, err := sample.ParseCreateMeeting(fake)
+		require.NoError(t, err)
+		assert.Equal(t, "/create?name=meet+one&meetingID=aaaaaaaa&moderatorPW=mp&attendeePW=ap&record=true", out)
+	})
+
+	t.Run("Should not include `record` boolean field in URL if its false", func(t *testing.T) {
+		sample := CreateMeeting{Name: "meet one", ModeratorPass: "mp", AttendeePass: "ap", IsRecording: false}
+		out, err := sample.ParseCreateMeeting(fake)
+		require.NoError(t, err)
+		assert.Equal(t, "/create?name=meet+one&meetingID=aaaaaaaa&moderatorPW=mp&attendeePW=ap", out)
+	})
+
+	t.Run("If `record` boolean field is provided and its true then must also include `autoStartRecording=true` in URL", func(t *testing.T) {
+		sample := CreateMeeting{Name: "meet one", ModeratorPass: "mp", AttendeePass: "ap", IsRecording: true}
+		out, err := sample.ParseCreateMeeting(fake)
+		require.NoError(t, err)
+		assert.Equal(t, "/create?name=meet+one&meetingID=aaaaaaaa&moderatorPW=mp&attendeePW=ap&record=true", out)
+	})
 }
