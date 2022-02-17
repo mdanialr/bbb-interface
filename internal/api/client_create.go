@@ -21,7 +21,7 @@ type CreateMeeting struct {
 
 // CreateMeetingResponse holds data from BBB API response after create meeting.
 type CreateMeetingResponse struct {
-	StatusCode    string `xml:"returncode" json:"-"`
+	StdResponse
 	MeetingId     string `xml:"meetingID" json:"meeting_id"`
 	AttendeePass  string `xml:"attendeePW" json:"attendee_pass"`
 	ModeratorPass string `xml:"moderatorPW" json:"moderator_pass"`
