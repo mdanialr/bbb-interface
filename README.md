@@ -125,3 +125,31 @@ Example Response. It's simply just parse the incoming request then append the ca
 > Response
 
 `url`: The url that need to be open up in browser otherwise would end up got 401 error when joining.
+
+## End Meeting
+> `POST` /end
+
+Example Request
+```json
+{
+    "meeting_id": "someRandomStringFromCreateCall",
+    "password": "passwordOfTheModeratorOfThisParticularMeeting"
+}
+```
+
+Example Response.
+```json
+{
+  "message": "meeting someRandomStringFromCreateCall successfully deleted"
+}
+```
+### Params
+> Request
+
+`meeting_id` `string` `required`: The meeting ID that identifies the meeting you are attempting to forcibly ended.
+
+`password` `string` `required`: The password of the moderator of this meeting.
+
+> Response
+
+`message`: A message to indicate that this api call is success and should also return with http status code `200`.
