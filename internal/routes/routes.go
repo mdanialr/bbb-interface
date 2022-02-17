@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"github.com/kurvaid/bbb-interface/internal/middlewares"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -9,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/kurvaid/bbb-interface/internal/config"
 	"github.com/kurvaid/bbb-interface/internal/handlers"
+	"github.com/kurvaid/bbb-interface/internal/middlewares"
 )
 
 func SetupRoutes(app *fiber.App, conf *config.Model, hCl *http.Client) {
