@@ -2,13 +2,11 @@ package handlers
 
 import (
 	"bytes"
-	"encoding/xml"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/kurvaid/bbb-interface/internal/api"
 	"github.com/kurvaid/bbb-interface/internal/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -36,16 +34,8 @@ var sampleJoinRequestBody = []string{
 // prepare fake server to mimic BBB Server
 var fakeJoinServerHelper = func(t *testing.T) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		resp := api.JoinMeetingResponse{SessionToken: "secureSessionToken"}
-		xm, err := xml.Marshal(&resp)
-		if err != nil {
-			t.Fatalf("failed to marshal object to xml: %s", err)
-		}
-
 		rw.WriteHeader(fiber.StatusOK)
 		rw.Header().Set("Content-Type", fiber.MIMEApplicationXML)
-		_, err = rw.Write(xm)
-		require.NoError(t, err)
 	}))
 }
 

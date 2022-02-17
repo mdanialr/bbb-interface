@@ -16,11 +16,6 @@ type JoinMeeting struct {
 	IsGuest    bool   `json:"is_guest"`    // To indicate that the user is a guest.
 }
 
-// JoinMeetingResponse holds data from BBB API response after join the meeting.
-type JoinMeetingResponse struct {
-	SessionToken string `xml:"session_token"`
-}
-
 // ParseJoinMeeting parse given request body binding from json and convert them
 // to url string that meet BBB API requirements.
 func (j *JoinMeeting) ParseJoinMeeting() (string, error) {

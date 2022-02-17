@@ -14,3 +14,11 @@ const (
 	UpdateRecordingMeta = "updateRecordings"    // Updates metadata in a recording.
 	EndPoint            = "bigbluebutton/api"   // BBB API endpoint.
 )
+
+// StdResponse standard response from BBB API either one field or all fields would always be populated when
+// receiving response from BBB API after make an API call.
+type StdResponse struct {
+	CodeString string `xml:"returncode" json:"-"` // May contain only either SUCCESS or FAILED.
+	MsgKey     string `xml:"messageKey" json:"-"` // A unique key defined by BBB API to identify which error are thrown.
+	MsgDetail  string `xml:"message" json:"-"`    // Detail message about the occurred error.
+}
