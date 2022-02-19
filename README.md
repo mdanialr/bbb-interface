@@ -1,5 +1,10 @@
 # BBB Interface
-BigBlueButton API wrapper to make the other apps interact with the server more easily
+BigBlueButton API wrapper to make the other apps interact with BBB server easier.
+## Features
+* Create Meeting.
+* Join Meeting.
+* End Meeting. [*__forcibly end meeting__*]
+* Is Meeting Running. [*__check whether a meeting is currently running or not__*]
 
 # How to Use
 ## Auth/Token
@@ -52,13 +57,13 @@ Example Response
 ```json
 {
     "meeting_id": "someRandomString",
-    "attendee_pass": "password-for-attende",
+    "attendee_pass": "password-for-attendee",
     "moderator_pass": "password-for-moderator",
     "create_time": "1531155809613",
     "created_at": "Mon Jul 09 17:03:29 UTC 2040"
 }
 ```
-### Params
+### Parameters
 > Request
 
 `name` `string` `required`: A name for the meeting.
@@ -105,7 +110,7 @@ Example Response. It's simply just parse the incoming request then append the ca
     "url": "http://bbb-server.test/bigbluebutton/api/join?meetingID=someRandomStringFromCreateCall..."
 }
 ```
-### Params
+### Parameters
 > Request
 
 `name` `string` `required`: The full name that is to be used to identify this user to other conference attendees.
@@ -143,7 +148,7 @@ Example Response.
     "message": "meeting someRandomStringFromCreateCall successfully deleted"
 }
 ```
-### Params
+### Parameters
 > Request
 
 `meeting_id` `string` `required`: The meeting ID that identifies the meeting you are attempting to forcibly ended.
@@ -170,7 +175,7 @@ Example Response.
     "status": true
 }
 ```
-### Params
+### Parameters
 > Request
 
 `meeting_id` `string` `required`: The meeting ID that identifies the meeting you are attempting to check whether its currently running or not.
