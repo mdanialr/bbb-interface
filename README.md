@@ -102,7 +102,7 @@ Example Request
 Example Response. It's simply just parse the incoming request then append the calculated checksum. 
 ```json
 {
-  "url": "http://bbb-server.test/bigbluebutton/api/join?meetingID=someRandomStringFromCreateCall..."
+    "url": "http://bbb-server.test/bigbluebutton/api/join?meetingID=someRandomStringFromCreateCall..."
 }
 ```
 ### Params
@@ -124,7 +124,7 @@ Example Response. It's simply just parse the incoming request then append the ca
 
 > Response
 
-`url`: The url that need to be open up in browser otherwise would end up got 401 error when joining.
+`url` `string`: The url that need to be open up in browser otherwise would end up got 401 error when joining.
 
 ## End Meeting
 > `POST` /end
@@ -140,7 +140,7 @@ Example Request
 Example Response.
 ```json
 {
-  "message": "meeting someRandomStringFromCreateCall successfully deleted"
+    "message": "meeting someRandomStringFromCreateCall successfully deleted"
 }
 ```
 ### Params
@@ -152,4 +152,29 @@ Example Response.
 
 > Response
 
-`message`: A message to indicate that this api call is success and should also return with http status code `200`.
+`message` `string`: A message to indicate that this api call is success and should also return with http status code `200`.
+
+## Is a Meeting Running
+> `POST` /is_run
+
+Example Request
+```json
+{
+    "meeting_id": "someRandomStringFromCreateCall"
+}
+```
+
+Example Response.
+```json
+{
+    "status": true
+}
+```
+### Params
+> Request
+
+`meeting_id` `string` `required`: The meeting ID that identifies the meeting you are attempting to check whether its currently running or not.
+
+> Response
+
+`status` `boolean`: The status of the meeting's running state and should also return with http status code `200`.

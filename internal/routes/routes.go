@@ -40,6 +40,10 @@ func SetupRoutes(app *fiber.App, conf *config.Model, hCl *http.Client) {
 		middlewares.Auth(conf),
 		handlers.EndMeeting(conf, hCl),
 	)
+	app.Post("/is_run",
+		middlewares.Auth(conf),
+		handlers.IsRunning(conf, hCl),
+	)
 	app.Get("/callback/destroy", handlers.CallbackOnDestroy(conf, hCl))
 
 	// Custom middlewares AFTER endpoints
