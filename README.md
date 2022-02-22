@@ -5,6 +5,8 @@ BigBlueButton API wrapper to make the other apps interact with BBB server easier
 * Join Meeting.
 * End Meeting. [*__forcibly end meeting__*]
 * Is Meeting Running. [*__check whether a meeting is currently running or not__*]
+## Under the Hood
+![BBB-Interface Meeting](https://user-images.githubusercontent.com/48054961/155137703-707f45ca-8ed5-4b9c-9951-b18149fa53c3.png)
 
 # How to Use
 ## Auth/Token
